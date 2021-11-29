@@ -1,0 +1,19 @@
+services:
+    janwebdev.translatable.event.adapter:
+        class:     Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\ORM\DoctrineAdapter
+
+    janwebdev.translatable.locale:
+        class:     Janwebdev\TranslatableEntityBundle\Locale\Locale
+        arguments: ["%locale%"]
+
+    janwebdev.translatable.locale_listener:
+        class:     Janwebdev\TranslatableEntityBundle\Listener\LocaleListener
+        arguments: ["@janwebdev.translatable.locale"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    janwebdev.translatable.translatable_listener:
+        class:     Janwebdev\TranslatableEntityBundle\Listener\TranslatableListener
+        arguments: ["@janwebdev.translatable.event.adapter", "@janwebdev.translatable.locale"]
+        tags:
+            - { name: doctrine.event_listener, event: postLoad, lazy: true }
