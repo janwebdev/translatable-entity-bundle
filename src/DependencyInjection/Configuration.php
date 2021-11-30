@@ -14,10 +14,9 @@ class Configuration implements ConfigurationInterface
 	 */
 	public function getConfigTreeBuilder()
 	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('sellit_translatable');
+		$treeBuilder = new TreeBuilder('janwebdev_translatable_entity');
 
-		$rootNode
+		$treeBuilder->getRootNode()
 			->children()
 				->arrayNode('classes')
 					->addDefaultsIfNotSet()
