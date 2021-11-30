@@ -3,7 +3,7 @@
 namespace Janwebdev\TranslatableEntityBundle\Listener;
 
 use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 
 class LocaleListener
@@ -15,7 +15,7 @@ class LocaleListener
         $this->locale = $locale;
     }
 
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
 	    $this->locale->setLocale($event->getRequest()->getLocale());
     }
