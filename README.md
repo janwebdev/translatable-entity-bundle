@@ -1,5 +1,6 @@
 ## Symfony bundle for making translatable entities
-
+[![Unit Tests](https://github.com/janwebdev/translatable-entity-bundle/actions/workflows/run-tests.yml/badge.svg)](https://github.com/janwebdev/translatable-entity-bundle/actions/workflows/run-tests.yml)
+[![Latest Stable Version](https://poser.pugx.org/janwebdev/translatable-entity-bundle/v)](//packagist.org/packages/janwebdev/translatable-entity-bundle) [![Total Downloads](https://poser.pugx.org/janwebdev/translatable-entity-bundle/downloads)](//packagist.org/packages/janwebdev/translatable-entity-bundle) [![Latest Unstable Version](https://poser.pugx.org/janwebdev/translatable-entity-bundle/v/unstable)](//packagist.org/packages/janwebdev/translatable-entity-bundle) [![License](https://poser.pugx.org/janwebdev/translatable-entity-bundle/license)](//packagist.org/packages/janwebdev/translatable-entity-bundle)
 ### Prerequisites
 
 1. Installation
