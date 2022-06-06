@@ -7,7 +7,6 @@ use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
 use Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface;
 use Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\EventAdapterInterface;
 
-
 class TranslatableListener
 {
     protected LocaleInterface $locale;

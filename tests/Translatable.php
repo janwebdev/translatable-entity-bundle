@@ -6,14 +6,14 @@ use Janwebdev\TranslatableEntityBundle\Model\Translatable as BaseTranslatable;
 
 class Translatable extends BaseTranslatable
 {
-    const HANDLE_NOT_FOUND_EXCEPTION = 'exception';
-    const HANDLE_NOT_FOUND_NULL = 'null';
-    const HANDLE_NOT_FOUND_EMTPY_OBJECT = 'emptyObject';
+    public const HANDLE_NOT_FOUND_EXCEPTION = 'exception';
+	public const HANDLE_NOT_FOUND_NULL = 'null';
+	public const HANDLE_NOT_FOUND_EMTPY_OBJECT = 'emptyObject';
 
-    protected $translations;
-    public $handleNotFound = self::HANDLE_NOT_FOUND_EXCEPTION;
+    protected $translations = [];
+    public string $handleNotFound = self::HANDLE_NOT_FOUND_EXCEPTION;
 
-    public function getTranslations()
+    public function getTranslations(): array
     {
         return $this->translations;
     }
@@ -36,12 +36,6 @@ class Translatable extends BaseTranslatable
 
     private function handleEmptyObject()
     {
-        $class = get_class($this);
-        $this->translation = new $class;
-    }
-
-    public function getDummyValue()
-    {
-
+        $this->translation = new TranslationEn();
     }
 }

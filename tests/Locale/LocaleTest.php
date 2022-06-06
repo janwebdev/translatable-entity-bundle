@@ -1,12 +1,13 @@
 <?php
 
-namespace Janwebdev\TranslatableEntityBundle\Tests\Service;
+namespace Janwebdev\TranslatableEntityBundle\Tests\Locale;
 
 use Janwebdev\TranslatableEntityBundle\Locale\Locale;
+use PHPUnit\Framework\TestCase;
 
-class LocaleTest extends \PHPUnit_Framework_TestCase
+class LocaleTest extends TestCase
 {
-    public function testLocale()
+    public function testLocale(): void
     {
         $locale = new Locale('en');
         $locale->setLocale('it');
@@ -14,7 +15,7 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('it', $locale->getLocale());
     }
     
-    public function testLocaleDefault()
+    public function testLocaleDefault(): void
     {
         $locale = new Locale('en');
         

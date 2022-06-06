@@ -4,6 +4,9 @@ namespace Janwebdev\TranslatableEntityBundle\Model;
 
 abstract class TranslatableWrapper extends Translatable
 {
+    /**
+     * @throws \ReflectionException
+     */
     public function __get($method)
     {
         $translation = $this->getTranslation();
@@ -22,12 +25,15 @@ abstract class TranslatableWrapper extends Translatable
         throw new \RuntimeException(sprintf('The method "%s" does not exist', $method));
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function __call($method, $args)
     {
         return $this->__get($method);
     }
 
-    protected function getGetters($method)
+    protected function getGetters($method): array
     {
         $getters = array();
         $getters[] = $method;

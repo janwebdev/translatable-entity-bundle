@@ -1,28 +1,32 @@
 {
     "name": "janwebdev/translatable-entity-bundle",
     "description": "Make Entity translatable",
-    "keywords": ["symfony i18n translation"],
+    "keywords": ["symfony", "bundle", "translatable", "translation", "i18n", "php"],
     "type": "symfony-bundle",
     "homepage": "https://github.com/janwebdev/translatable-entity-bundle",
     "license": "MIT",
     "authors": [
         {
             "name": "Jan Rogozinsky",
-            "email": "janwebdev@gmail.com"
+            "email": "janwebdev@gmail.com",
+            "role": "PHP developer"
         }
     ],
     "require":{
-        "php": ">=7.4",
-        "symfony/config": "^5.3",
-        "symfony/dependency-injection": "^5.3",
-        "symfony/framework-bundle": "^5.3",
+        "php": "^7.4|^8.0|^8.1",
+        "symfony/config": "^4.4||^5.4||^6",
+        "symfony/dependency-injection": "^4.4||^5.4||^6",
+        "symfony/framework-bundle": "^4.4||^5.4||^6",
         "doctrine/orm": "^2.5"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "symfony/test-pack": "*",
-        "phpunit/phpunit": "^8.0",
-        "symfony/yaml": "^5.3"
+        "phpunit/phpunit": "^9",
+        "phpro/grumphp": "^1.3",
+        "squizlabs/php_codesniffer": "^3.5",
+        "phpstan/phpstan": "^1.7.10"
+
     },
     "autoload": {
         "psr-4": {
@@ -40,7 +44,20 @@
     "extra": {
         "symfony": {
             "allow-contrib": "true",
-            "require": "^5.3"
+            "require": "^4.4"
+        },
+        "branch-alias": {
+            "dev-master": "2.x-dev"
         }
-    }
+    },
+    "scripts": {
+        "test": "./vendor/bin/grumphp run"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }

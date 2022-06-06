@@ -12,7 +12,7 @@ interface EventAdapterInterface
      * @param  EventArgs $e The event arguments.
      * @return object    The mapped object.
      */
-    function getObject(EventArgs $e);
+    public function getObject(EventArgs $e): ?object;
 
 
     /**
@@ -22,5 +22,5 @@ interface EventAdapterInterface
      * @param  object           $obj The object.
      * @return \ReflectionClass The reflection class.
      */
-    function getReflectionClass($obj);
+    public function getReflectionClass($obj): \ReflectionClass;
 }

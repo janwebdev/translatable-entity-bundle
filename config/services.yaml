@@ -10,7 +10,7 @@ services:
         class:     Janwebdev\TranslatableEntityBundle\Listener\LocaleListener
         arguments: ["@janwebdev.translatable.locale"]
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.request, method: setLocale }
 
     janwebdev.translatable.translatable_listener:
         class:     Janwebdev\TranslatableEntityBundle\Listener\TranslatableListener

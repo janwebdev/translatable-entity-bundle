@@ -1,7 +1,6 @@
-Janwebdev\TranslatableEntityBundle Documentation
-==================================
+## Symfony bundle for making translatable entities
 
-## Prerequisites
+### Prerequisites
 
 1. Installation
 2. Enable the Bundle
@@ -17,7 +16,7 @@ Janwebdev\TranslatableEntityBundle Documentation
 Run the composer to download the bundle:
 
 ``` bash
-$ php composer.phar require janwebdev/translatable-entity-bundle
+$ composer require janwebdev/translatable-entity-bundle
 ```
 
 ### 2. Enable the bundle
@@ -26,7 +25,7 @@ Check if bundle was enabled:
 
 ``` php
 <?php
-// config/bundles.php
+// ./config/bundles.php
 
 return [
     // ...
@@ -37,10 +36,9 @@ return [
 ### 3. Entities
 
 ``` php
-
 <?php
 
-namespace Acme\MyBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -56,14 +54,12 @@ class Article
         $this->translations = new ArrayCollection();
     }
 }
-
 ```
 
 ``` php
-
 <?php
 
-namespace Acme\MyBundle\Entity;
+namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -87,7 +83,6 @@ class ArticleTranslation
      */
     private $name;
 }
-
 ```
 Then run doctrine:generate:entities and *remove the generated method addTranslation* (for Article in this example).
 Now you can implement the correct interfaces.
@@ -96,42 +91,42 @@ Now you can implement the correct interfaces.
 
 <?php
 
+namespace App\Entity;
+
 use Janwebdev\TranslatableEntityBundle\Model\TranslatableWrapper;
 
 class Article extends TranslatableWrapper
 {    
     
 }
-
 ```
 
 TranslatableWrapper extends Translatable (that implements some methods of TranslatableInterface) and adds a magic method to wrap the methods of TranslatingInterface entity.
 
 ``` php
-
 <?php
+
+namespace App\Entity;
 
 use Janwebdev\TranslatableEntityBundle\Model\TranslatingInterface;
 use Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface;
 
-class ArtcileI18n implements TranslatingInterface
+class ArtcileTranslation implements TranslatingInterface
 {    
     
 }
-
 ```
 
-*Remember to modify the signature for ArticleI18n::setTranslatable*
+*Remember to modify the signature for ArticleTranslation::setTranslatable*
 
 If you want "kill the magic", you can extend directly Janwebdev\TranslatableEntityBundle\Model\Translatable and create the needed wrapper methods by yourself.
 
 ### 4. Repository
 
 ``` php
-
 <?php
 
-namespace Acme\MyBundle\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -139,14 +134,13 @@ class ArticleRepository extends EntityRepository
 {
     public function getArticleTranslatedQuery()
     {
-        $q = $this->createQueryBuilder('a')
+        $qb = $this->createQueryBuilder('a')
             ->select(array('a', 'at'))
             ->leftJoin('a.translations', 'at');
 
-        return $q;
+        return $qb;
     }
 }
-
 ```
 
 ### 5. Form
@@ -154,10 +148,9 @@ class ArticleRepository extends EntityRepository
 A possible form implementation
 
 ``` php
-
 <?php
 
-namespace Acme\MyBundle\Form\Type;
+namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -173,16 +166,16 @@ class ArtcileTranslationFormType extends AbstractType
     public function setDefaultOptions(array $options)
     {
         return array(
-            'data_class' => 'Acme\MyBundle\Entity\ArtcileTranslation',
+            'data_class' => 'App\Entity\ArtcileTranslation',
         );
     }
 }
-
 ```
 
 ``` php
+<?php
 
-namespace Acme\MyBundle\Form\Type;
+namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -192,16 +185,12 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('translations', 'collection', array(
-            'type' => new ArtcileI18nFormType(),
-            'allow_add' => true,
+            'type' => new ArtcileTranslation
             'by_reference' => false,
         ));
     }
 }
-
 ```
-[Allowing "new" tags with the "prototype"] (http://symfony.com/doc/current/cookbook/form/form_collections.html#allowing-new-tags-with-the-prototype)
-
 
 ### 6. Customize the behaviour for default translation and translation not found
 
@@ -248,4 +237,14 @@ for example
  }
  ```
 
+## Unit tests
 
+``` bash
+$ phpunit
+```
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

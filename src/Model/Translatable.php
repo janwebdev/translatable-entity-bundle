@@ -3,7 +3,6 @@
 namespace Janwebdev\TranslatableEntityBundle\Model;
 
 use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
-use Janwebdev\TranslatableEntityBundle\Model\TranslatingInterface;
 
 abstract class Translatable implements TranslatableInterface
 {
@@ -34,7 +33,7 @@ abstract class Translatable implements TranslatableInterface
     /**
      * if you need a transaltion even in a translation in current language was not found, return true
      */
-    protected function acceptFirstTransaltionAsDefault()
+    protected function acceptFirstTransaltionAsDefault(): bool
     {
         return false;
     }
@@ -42,7 +41,7 @@ abstract class Translatable implements TranslatableInterface
     /**
      * if you don't want that only translation in locale will be returned, return false
      */
-    protected function acceptDefaultLocaleTransaltionAsDefault()
+    protected function acceptDefaultLocaleTransaltionAsDefault(): bool
     {
         return true;
     }
@@ -51,9 +50,9 @@ abstract class Translatable implements TranslatableInterface
      * get current translation based on locale
      * @return TranslatingInterface $translation|null
      */
-    public function getTranslation(): ?TranslatingInterface
+    public function getTranslation()
     {
-        if ( !is_null($this->translation) ) {
+        if (!is_null($this->translation)) {
             return $this->translation;
         }
 
@@ -62,24 +61,23 @@ abstract class Translatable implements TranslatableInterface
         $locale         = $this->locale->getLocale();
 
         foreach ($translations as $translation) {
-
             if ($this->acceptFirstTransaltionAsDefault()) {
                 $defaultTranslation = $translation;
             }
 
             $translationLocale = $translation->getLocale();
 
-            if ( $translationLocale == $defaultLocale && $this->acceptDefaultLocaleTransaltionAsDefault()) {
+            if ($translationLocale === $defaultLocale && $this->acceptDefaultLocaleTransaltionAsDefault()) {
                 $defaultTranslation = $translation;
             }
 
-            if ( $translationLocale == $locale ) {
+            if ($translationLocale === $locale) {
                 $this->setTranslation($translation);
                 break;
             }
         }
 
-        if ( is_null($this->translation) && isset($defaultTranslation) ) {
+        if (is_null($this->translation) && isset($defaultTranslation)) {
             $this->setTranslation($defaultTranslation);
         }
 

@@ -4,9 +4,7 @@ namespace Janwebdev\TranslatableEntityBundle\Locale;
 
 interface LocaleInterface
 {
-    function setLocale($locale);
-
-    function getLocale();
-
-    function getDefaultLocale();
+    public function setLocale($locale): void;
+    public function getLocale(): string;
+    public function getDefaultLocale(): string;
 }

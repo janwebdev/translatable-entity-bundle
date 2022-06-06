@@ -11,7 +11,7 @@ class DoctrineAdapter implements EventAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function getObject(EventArgs $e)
+    public function getObject(EventArgs $e): ?object
     {
         return $e->getEntity();
     }
@@ -19,7 +19,7 @@ class DoctrineAdapter implements EventAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function getReflectionClass($obj)
+    public function getReflectionClass($obj): \ReflectionClass
     {
         if ($obj instanceof Proxy) {
             return new \ReflectionClass(get_parent_class($obj));

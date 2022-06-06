@@ -5,15 +5,18 @@ namespace Janwebdev\TranslatableEntityBundle\Tests\Mapping\Event\Adpapter\ORM;
 use Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\ORM\DoctrineAdapter;
 use Janwebdev\TranslatableEntityBundle\Tests\Translatable;
 use Janwebdev\TranslatableEntityBundle\Tests\TranslatableProxy;
+use PHPUnit\Framework\TestCase;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Proxy\Proxy;
 
-class DoctrineAdapterTest extends \PHPUnit_Framework_TestCase
+class DoctrineAdapterTest extends TestCase
 {
-    public function testGetObject()
+    public function testGetObject(): void
     {
-        if (!class_exists('Doctrine\ORM\Event\LifecycleEventArgs')) {
+        if (!class_exists(LifecycleEventArgs::class)) {
             $this->markTestSkipped('Doctrine\ORM\Event\LifecycleEventArgs does not exist.');
         } else {
-            $args = $this->getMockBuilder('Doctrine\ORM\Event\LifecycleEventArgs')
+            $args = $this->getMockBuilder(LifecycleEventArgs::class)
                     ->disableOriginalConstructor()->getMock();
             
             $adapter = new DoctrineAdapter();
@@ -22,12 +25,12 @@ class DoctrineAdapterTest extends \PHPUnit_Framework_TestCase
         }
     }
     
-    public function testGetReflectionClass()
+    public function testGetReflectionClass(): void
     {
-        if (!interface_exists('Doctrine\ORM\Proxy\Proxy')) {
+        if (!interface_exists(Proxy::class)) {
             $this->markTestSkipped('Doctrine\ORM\Proxy\Proxy does not exist.');
         } else {
-            $obj = new Translatable(array());
+            $obj = new Translatable();
             $adapter = new DoctrineAdapter();
             $class = $adapter->getReflectionClass($obj);
 
@@ -35,12 +38,12 @@ class DoctrineAdapterTest extends \PHPUnit_Framework_TestCase
         }
     }
     
-    public function testGetReflectionClassProxy()
+    public function testGetReflectionClassProxy(): void
     {
-        if (!interface_exists('Doctrine\ORM\Proxy\Proxy')) {
+        if (!interface_exists(Proxy::class)) {
             $this->markTestSkipped('Doctrine\ORM\Proxy\Proxy does not exist.');
         } else {
-            $obj = new TranslatableProxy(array());
+            $obj = new TranslatableProxy();
             $adapter = new DoctrineAdapter();
             $class = $adapter->getReflectionClass($obj);
 

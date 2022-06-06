@@ -3,28 +3,38 @@
 namespace Janwebdev\TranslatableEntityBundle\Tests\Listener;
 
 use Janwebdev\TranslatableEntityBundle\Listener\LocaleListener;
-use Janwebdev\TranslatableEntityBundle\Locale\Locale;
+use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use PHPUnit\Framework\TestCase;
 
-class LocaleListenerTest extends \PHPUnit_Framework_TestCase
+class LocaleListenerTest extends TestCase
 {
-    public function setUp()
+	protected $event;
+	protected $locale;
+	protected $request;
+	protected $listener;
+
+    protected function setUp(): void
     {
-        $this->event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $this->event = $this->getMockBuilder(RequestEvent::class)
                 ->disableOriginalConstructor()->getMock();
-        $this->locale = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface')
+        $this->locale = $this->getMockBuilder(LocaleInterface::class)
                 ->disableOriginalConstructor()->getMock();
-        $this->request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
+        $this->request = $this->getMockBuilder(Request::class)
                 ->disableOriginalConstructor()->getMock();
 
         $this->listener = new LocaleListener($this->locale);
+
+        parent::setUp();
     }
     
-    public function testOnKernelRequest()
+    public function testOnKernelRequest(): void
     {
         $this->event->expects($this->once())->method('getRequest')
-                ->will($this->returnValue($this->request));     
+                ->willReturn($this->request);
         $this->request->expects($this->once())->method('getLocale')
-                ->will($this->returnValue('en'));     
+                ->willReturn('en');
         $this->locale->expects($this->once())->method('setLocale')
                 ->with('en');
         

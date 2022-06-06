@@ -1,99 +1,123 @@
 <?php
 
-namespace Janwebdev\TranslatableEntityBundle\Tests\Service;
+namespace Janwebdev\TranslatableEntityBundle\Tests\Model;
 
+use Janwebdev\TranslatableEntityBundle\Model\TranslatingInterface;
+use PHPUnit\Framework\TestCase;
+use Janwebdev\TranslatableEntityBundle\Tests\TranslationEn;
+use Janwebdev\TranslatableEntityBundle\Tests\TranslationIt;
+use Janwebdev\TranslatableEntityBundle\Tests\TranslationDe;
+use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
 use Janwebdev\TranslatableEntityBundle\Tests\Translatable;
 
-class TranslatableTest extends \PHPUnit_Framework_TestCase
+class TranslatableTest extends TestCase
 {
     protected $translationStubEn;
     protected $translationStubIt;
-    
-    public function setUp()
+    protected $translationStubDe;
+    protected $locale;
+
+    public function setUp(): void
     {
-        $this->translationStubEn  = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Tests\TranslationEn')->disableOriginalConstructor()->getMock();
-        $this->translationStubIt  = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Tests\TranslationIt')->disableOriginalConstructor()->getMock();
-        $this->translationStubDe  = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Tests\TranslationDe')->disableOriginalConstructor()->getMock();
-        $this->locale             = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface')->disableOriginalConstructor()->getMock();
+        $this->translationStubEn = $this->getMockBuilder(TranslationEn::class)->disableOriginalConstructor()->getMock();
+        $this->translationStubIt  = $this->getMockBuilder(TranslationIt::class)->disableOriginalConstructor()->getMock();
+        $this->translationStubDe  = $this->getMockBuilder(TranslationDe::class)->disableOriginalConstructor()->getMock();
+        $this->locale = $this->getMockBuilder(LocaleInterface::class)->disableOriginalConstructor()->getMock();
     }
     
-    /**
-     *
-     * tranlsations, locale, defaultLocale, tranlsationExpected
-     */
-    public function getTranslationProvider()
+    public function getTranslationProvider(): array
     {
-        return array(
-          array(array('it' => 'translationStubIt', 'en' => 'translationStubEn'), 'en', 'en', 'translationStubEn'), //testGetTranslationLocaleEqualDefault
-          array(array('en' => 'translationStubEn', 'it' => 'translationStubIt'), 'en', 'it', 'translationStubIt'), //testGetTranslationLocaleEqualIt
-          array(array('en' => 'translationStubEn'), 'en', 'it', 'translationStubEn'), //testGetTranslationDefaultLocaleLessLocaleSettedReturnDefault
-        );   
+        return [
+          [
+          	[
+          		'it' => 'translationStubIt',
+	            'en' => 'translationStubEn'
+            ],
+	          'en',
+	          'en',
+	          'translationStubEn'
+          ], //testGetTranslationLocaleEqualDefault
+          [
+          	[
+          		'en' => 'translationStubEn',
+	            'it' => 'translationStubIt'
+            ],
+	          'en',
+	          'it',
+	          'translationStubIt'
+          ], //testGetTranslationLocaleEqualIt
+          [
+          	[
+          		'en' => 'translationStubEn'
+            ],
+	          'en',
+	          'it',
+	          'translationStubEn'
+          ], //testGetTranslationDefaultLocaleLessLocaleSettedReturnDefault
+        ];
     }
     
     /**
      * @dataProvider getTranslationProvider
      */
-    public function testGetTranslation($translations, $defaultLocale, $locale, $translationExpected)
+    public function testGetTranslation($translations, $defaultLocale, $locale, $translationExpected): void
     {
         $translatable = new Translatable();
         $translatable->setLocale($this->locale);
         
         foreach ($translations as $language => $translation) {
-            $this->$translation->expects($this->exactly(2))->method('getLocale')->will($this->returnValue($language));
+            $this->$translation->expects($this->exactly(2))->method('getLocale')->willReturn($language);
             $translatable->addTranslation($this->$translation);
         }
         
-        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->will($this->returnValue($defaultLocale));
+        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->willReturn($defaultLocale);
         $this->locale->expects($this->exactly(1))->method('getLocale')->will($this->returnValue($locale));
                
         $result = $translatable->getTranslation();
         $this->assertEquals($this->$translationExpected, $result);
     }
-    
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testHandleNotFoundThrowsException()
-    {
-        $translatable = new Translatable(array($this->translationStubDe));
+
+	public function testHandleNotFoundThrowsException(): void
+	{
+	    $this->expectException(\RuntimeException::class);
+	    $translatable = new Translatable();
         $translatable->setLocale($this->locale);
-        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->will($this->returnValue('de'));
+        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->willReturn('de');
         $translatable->addTranslation($this->translationStubDe);
         
-        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->will($this->returnValue('en'));
-        $this->locale->expects($this->exactly(1))->method('getLocale')->will($this->returnValue('it'));
+        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->willReturn('en');
+        $this->locale->expects($this->exactly(1))->method('getLocale')->willReturn('it');
         
         $translatable->getTranslation();
     }
 
-    public function testHandleNotFoundReturnsNull()
+    public function testHandleNotFoundReturnsNull(): void
     {
-        $translatable = new Translatable(array($this->translationStubDe));
+        $translatable = new Translatable();
         $translatable->handleNotFound = $translatable::HANDLE_NOT_FOUND_NULL;
         $translatable->setLocale($this->locale);
-        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->will($this->returnValue('de'));
+        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->willReturn('de');
         $translatable->addTranslation($this->translationStubDe);
 
-        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->will($this->returnValue('en'));
-        $this->locale->expects($this->exactly(1))->method('getLocale')->will($this->returnValue('it'));
+        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->willReturn('en');
+        $this->locale->expects($this->exactly(1))->method('getLocale')->willReturn('it');
 
         $result = $translatable->getTranslation();
         $this->assertNull($result);
     }
 
-    public function testHandleNotFoundReturnsEmptyObject()
+    public function testHandleNotFoundReturnsEmptyObject(): void
     {
-        $translatable = new Translatable(array($this->translationStubDe));
+        $translatable = new Translatable();
         $translatable->handleNotFound = $translatable::HANDLE_NOT_FOUND_EMTPY_OBJECT;
         $translatable->setLocale($this->locale);
-        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->will($this->returnValue('de'));
+        $this->translationStubDe->expects($this->exactly(2))->method('getLocale')->willReturn('de');
         $translatable->addTranslation($this->translationStubDe);
 
-        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->will($this->returnValue('en'));
-        $this->locale->expects($this->exactly(1))->method('getLocale')->will($this->returnValue('it'));
+        $this->locale->expects($this->exactly(1))->method('getDefaultLocale')->willReturn('en');
+        $this->locale->expects($this->exactly(1))->method('getLocale')->willReturn('it');
 
         $result = $translatable->getTranslation();
-        $this->assertInstanceOf('Janwebdev\TranslatableEntityBundle\Tests\Translatable', $result);
-        $this->assertNull($result->getDummyValue());
+        $this->assertInstanceOf(TranslatingInterface::class, $result);
     }
 }

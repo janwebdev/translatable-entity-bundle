@@ -3,19 +3,30 @@
 namespace Janwebdev\TranslatableEntityBundle\Tests\Listener;
 
 use Janwebdev\TranslatableEntityBundle\Listener\TranslatableListener;
-use Janwebdev\TranslatableEntityBundle\Locale\Locale;
+use PHPUnit\Framework\TestCase;
+use Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\EventAdapterInterface;
+use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
+use Doctrine\Common\EventArgs;
+use Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface;
 
-class EntityListenerTest extends \PHPUnit_Framework_TestCase
+class TranslatableListenerTest extends TestCase
 {
-    public function setUp()
+	protected $adapter;
+	protected $locale;
+	protected $args;
+	protected $entity;
+	protected $dummy;
+	protected $listener;
+
+    protected function setUp(): void
     {
-        $this->adapter  = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\EventAdapterInterface')
+        $this->adapter  = $this->getMockBuilder(EventAdapterInterface::class)
                 ->disableOriginalConstructor()->getMock();
-        $this->locale   = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface')
+        $this->locale   = $this->getMockBuilder(LocaleInterface::class)
                 ->disableOriginalConstructor()->getMock();
-        $this->args     = $this->getMockBuilder('Doctrine\Common\EventArgs')
+        $this->args     = $this->getMockBuilder(EventArgs::class)
                 ->disableOriginalConstructor()->getMock();                
-        $this->entity   = $this->getMockBuilder('Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface')
+        $this->entity   = $this->getMockBuilder(TranslatableInterface::class)
                 ->disableOriginalConstructor()->getMock();       
         $this->dummy    = $this->getMockBuilder('Dummy')
                 ->disableOriginalConstructor()->getMock();       
@@ -23,22 +34,22 @@ class EntityListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener = new TranslatableListener($this->adapter, $this->locale);
     }
     
-    public function testPostLoad()
+    public function testPostLoad(): void
     {        
         $this->adapter->expects($this->once())->method('getObject')
                 ->with($this->args)
-                ->will($this->returnValue($this->entity));        
+                ->willReturn($this->entity);
         $this->entity->expects($this->once())->method('setLocale')
                 ->with($this->locale);
         
         $this->listener->postLoad($this->args);
     }
     
-    public function testPostLoadInterfaceNotCorrect()
+    public function testPostLoadInterfaceNotCorrect(): void
     {        
         $this->adapter->expects($this->once())->method('getObject')
                 ->with($this->args)
-                ->will($this->returnValue($this->dummy));        
+                ->willReturn($this->dummy);
         $this->entity->expects($this->never())
                 ->method('setLocale');
         
