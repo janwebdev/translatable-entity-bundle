@@ -13,11 +13,11 @@
         }
     ],
     "require":{
-        "php": "^7.4|^8.0|^8.1",
-        "symfony/config": "^4.4||^5.4||^6",
-        "symfony/dependency-injection": "^4.4||^5.4||^6",
-        "symfony/framework-bundle": "^4.4||^5.4||^6",
-        "doctrine/orm": "^2.5"
+        "php": "^7.4|^8.0|^8.1|^8.2|^8.3|^8.4",
+        "symfony/config": "^4.4||^5.4||^6.4||^7",
+        "symfony/dependency-injection": "^4.4||^5.4||^6.4||^7",
+        "symfony/framework-bundle": "^4.4||^5.4||^6.4||^7",
+        "doctrine/orm": "^2.5|^3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
