@@ -2,11 +2,11 @@
 
 namespace Janwebdev\TranslatableEntityBundle\Model;
 
-use Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface;
-
 interface TranslatingInterface
 {
-    public function setLocale($string);
-    public function getLocale();
-    public function setTranslatable(TranslatableInterface $translatable);
+    public function setLocale(string $locale): void;
+    
+    public function getLocale(): string;
+    
+    public function setTranslatable(TranslatableInterface $translatable): void;
 }

@@ -8,19 +8,11 @@ interface EventAdapterInterface
 {
     /**
      * Gets the mapped object from the event arguments.
-     *
-     * @param  EventArgs $e The event arguments.
-     * @return object    The mapped object.
      */
     public function getObject(EventArgs $e): ?object;
 
-
     /**
-     * Gets the reflection class for the object taking
-     * proxies into account.
-     *
-     * @param  object           $obj The object.
-     * @return \ReflectionClass The reflection class.
+     * Gets the reflection class for the object taking proxies into account.
      */
-    public function getReflectionClass($obj): \ReflectionClass;
+    public function getReflectionClass(object $obj): \ReflectionClass;
 }

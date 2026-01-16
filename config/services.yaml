@@ -1,19 +1,36 @@
 services:
-    janwebdev.translatable.event.adapter:
-        class:     Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\ORM\DoctrineAdapter
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
 
-    janwebdev.translatable.locale:
-        class:     Janwebdev\TranslatableEntityBundle\Locale\Locale
-        arguments: ["%locale%"]
+  # Locale service - manages current and default locale
+  Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface:
+    class: Janwebdev\TranslatableEntityBundle\Locale\Locale
+    arguments:
+      $defaultLocale: "%kernel.default_locale%"
 
-    janwebdev.translatable.locale_listener:
-        class:     Janwebdev\TranslatableEntityBundle\Listener\LocaleListener
-        arguments: ["@janwebdev.translatable.locale"]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: setLocale }
+  Janwebdev\TranslatableEntityBundle\Locale\Locale:
+    arguments:
+      $defaultLocale: "%kernel.default_locale%"
 
-    janwebdev.translatable.translatable_listener:
-        class:     Janwebdev\TranslatableEntityBundle\Listener\TranslatableListener
-        arguments: ["@janwebdev.translatable.event.adapter", "@janwebdev.translatable.locale"]
-        tags:
-            - { name: doctrine.event_listener, event: postLoad, lazy: true }
+  # Event adapter for Doctrine ORM
+  Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\EventAdapterInterface:
+    class: Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\ORM\DoctrineAdapter
+
+  Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\ORM\DoctrineAdapter: ~
+
+  # Locale listener - sets locale from request
+  Janwebdev\TranslatableEntityBundle\Listener\LocaleListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.request,
+          method: setLocale,
+          priority: 16,
+        }
+
+  # Translatable listener - injects locale into translatable entities
+  Janwebdev\TranslatableEntityBundle\Listener\TranslatableListener:
+    tags:
+      - { name: doctrine.event_listener, event: postLoad, lazy: true }

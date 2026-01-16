@@ -8,21 +8,19 @@ use Doctrine\ORM\Proxy\Proxy;
 
 class DoctrineAdapter implements EventAdapterInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getObject(EventArgs $e): ?object
     {
         return $e->getEntity();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getReflectionClass($obj): \ReflectionClass
+    public function getReflectionClass(object $obj): \ReflectionClass
     {
         if ($obj instanceof Proxy) {
-            return new \ReflectionClass(get_parent_class($obj));
+            $parentClass = get_parent_class($obj);
+            if ($parentClass === false) {
+                throw new \RuntimeException('Unable to get parent class of proxy');
+            }
+            return new \ReflectionClass($parentClass);
         }
 
         return new \ReflectionClass($obj);
