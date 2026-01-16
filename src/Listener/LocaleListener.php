@@ -3,15 +3,16 @@
 namespace Janwebdev\TranslatableEntityBundle\Listener;
 
 use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
+#[AsEventListener(event: KernelEvents::REQUEST, method: 'setLocale', priority: 16)]
 class LocaleListener
 {
-    private LocaleInterface $locale;
-
-    public function __construct(LocaleInterface $locale)
-    {
-        $this->locale = $locale;
+    public function __construct(
+        private readonly LocaleInterface $locale
+    ) {
     }
 
     public function setLocale(RequestEvent $event): void

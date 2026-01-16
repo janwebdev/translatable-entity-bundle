@@ -1,3 +1,11 @@
 parameters:
-    ignoreErrors:
-        - '#^Access to an undefined property Janwebdev\\TranslatableEntityBundle\\Model\\Translatable\:\:\$translations.$#'
+    level: 8
+    paths:
+        - src
+    
+    # This error is now fixed - translations property exists
+    # ignoreErrors:
+    #     - '#^Access to an undefined property Janwebdev\\TranslatableEntityBundle\\Model\\Translatable\:\:\$translations.$#'
+    
+    # Type checks for mixed return types in magic methods
+    reportUnmatchedIgnoredErrors: false

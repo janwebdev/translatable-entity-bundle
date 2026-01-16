@@ -4,20 +4,25 @@ namespace Janwebdev\TranslatableEntityBundle\Model;
 
 abstract class TranslatableWrapper extends Translatable
 {
+    /** @var array<string, \ReflectionClass> */
+    private static array $reflectionCache = [];
+
     /**
+     * @param string $method
+     * @return mixed
      * @throws \ReflectionException
      */
-    public function __get($method)
+    public function __get(string $method): mixed
     {
         $translation = $this->getTranslation();
-        $reflectedTranslation = new \ReflectionClass(get_class($translation));
+        $reflectedTranslation = $this->getReflectionClass($translation);
 
         $getters = $this->getGetters($method);
         foreach ($getters as $getter) {
             if ($reflectedTranslation->hasMethod($getter)) {
                 $reflectedMethod = $reflectedTranslation->getMethod($getter);
                 if ($reflectedMethod->isPublic()) {
-                    return $reflectedMethod->invoke($translation, $getter);
+                    return $reflectedMethod->invoke($translation);
                 }
             }
         }
@@ -26,19 +31,39 @@ abstract class TranslatableWrapper extends Translatable
     }
 
     /**
+     * @param string $method
+     * @param array<int, mixed> $args
+     * @return mixed
      * @throws \ReflectionException
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): mixed
     {
         return $this->__get($method);
     }
 
-    protected function getGetters($method): array
+    /**
+     * @param string $method
+     * @return array<int, string>
+     */
+    protected function getGetters(string $method): array
     {
-        $getters = array();
-        $getters[] = $method;
-        $getters[] = 'get' . ucfirst($method);
+        return [
+            $method,
+            'get' . ucfirst($method)
+        ];
+    }
 
-        return $getters;
+    /**
+     * Get cached ReflectionClass instance
+     */
+    private function getReflectionClass(object $object): \ReflectionClass
+    {
+        $className = $object::class;
+        
+        if (!isset(self::$reflectionCache[$className])) {
+            self::$reflectionCache[$className] = new \ReflectionClass($object);
+        }
+        
+        return self::$reflectionCache[$className];
     }
 }

@@ -5,15 +5,14 @@ namespace Janwebdev\TranslatableEntityBundle\Locale;
 class Locale implements LocaleInterface
 {
     private string $locale;
-    private string $defaultLocale;
 
-    public function __construct($defaultLocale)
-    {
-        $this->locale        = $defaultLocale;
-        $this->defaultLocale = $defaultLocale;
+    public function __construct(
+        private readonly string $defaultLocale
+    ) {
+        $this->locale = $defaultLocale;
     }
 
-    public function setLocale($locale): void
+    public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
