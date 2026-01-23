@@ -9,7 +9,7 @@ use Janwebdev\TranslatableEntityBundle\Locale\LocaleInterface;
 use Janwebdev\TranslatableEntityBundle\Model\TranslatableInterface;
 use Janwebdev\TranslatableEntityBundle\Mapping\Event\Adapter\EventAdapterInterface;
 
-#[AsDoctrineListener(event: Events::postLoad, lazy: true)]
+#[AsDoctrineListener(event: Events::postLoad)]
 class TranslatableListener
 {
     public function __construct(
