@@ -10,7 +10,7 @@ class DoctrineAdapter implements EventAdapterInterface
 {
     public function getObject(EventArgs $e): ?object
     {
-        return $e->getEntity();
+        return $e->getObject();
     }
 
     public function getReflectionClass(object $obj): \ReflectionClass
